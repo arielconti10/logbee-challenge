@@ -8,10 +8,7 @@ import { connect } from 'react-redux';
 import { fetchUser, fetchTasks, logout } from '../actions/index';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline";
-import {TOKEN} from '../config/mapbox';
-import MapGL, {Marker, Popup, NavigationControl} from 'react-map-gl';
-import TaskPin from '../components/task-pin'
-import TaskInfo from '../components/task-info'
+import Map from '../components/Map';
 
 const navStyle = {
   position: 'absolute',
@@ -24,12 +21,7 @@ class Tasks extends Component {
   state = {
     completed: 0,
     buffer: 10,
-    viewport: {
-      latitude: -23.5489,
-      longitude: -46.6388,
-      zoom: 10,
-    },
-    popupInfo: null
+
   };
 
   componentWillMount() {
@@ -46,33 +38,6 @@ class Tasks extends Component {
     }
   }
 
-  _updateViewport = (viewport) => {
-    this.setState({viewport});
-  };
-
-  _renderTaskMarker = (task, index) => {
-    return (
-      <Marker key={`marker-${index}`}
-              longitude={task[1].longitude}
-              latitude={task[1].latitude} >
-        <TaskPin size={20} onClick={() => this.setState({popupInfo: task[1]})} />
-      </Marker>
-    );
-  };
-
-  _renderPopup() {
-    const {popupInfo} = this.state;
-
-    return popupInfo && (
-      <Popup tipSize={5}
-             anchor="top"
-             longitude={popupInfo.longitude}
-             latitude={popupInfo.latitude}
-             onClose={() => this.setState({popupInfo: null})} >
-        <TaskInfo info={popupInfo} />
-      </Popup>
-    );
-  }
   render(){
     return(
       <React.Fragment>
@@ -100,22 +65,11 @@ class Tasks extends Component {
             </AppBar>
               <Grid>
                 <Grid item xs='9'>
-                  <MapGL
-                    {...this.state.viewport}
-                    mapboxApiAccessToken={TOKEN}
-                    width="100vw"
-                    height="92vh"
-                    mapStyle="mapbox://styles/mapbox/dark-v9"
-                    onViewportChange={this._updateViewport}
-                  >
-                    { this.props.tasks ? Object.entries(this.props.tasks).map(this._renderTaskMarker) : ''}
-                    {this._renderPopup()}
-
-                    <div className="nav" style={navStyle}>
-                      <NavigationControl onViewportChange={this._updateViewport} />
-                    </div>
-
-                  </MapGL>
+                  <Map
+                    viewport={this.state.viewport}
+                    tasks={this.props.tasks ? this.props.tasks : ''}
+                    navStyle={navStyle}
+                  />
                 </Grid>
               </Grid>
           </main>
