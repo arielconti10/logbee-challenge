@@ -1,14 +1,30 @@
 
 import { tasksRef , authRef } from "../config/firebase";
 import { FETCH_TASKS, FETCH_USER } from "./types";
+export const TASK_STATUS = 'TASK_STATUS';
 
-export const fetchTasks = uid => async dispatch => {
-  tasksRef.child(uid).on("value", snapshot => {
+export function fetchTasks (){
+  return dispatch => {
     dispatch({
-      type: FETCH_TASKS,
-      payload: snapshot.val()
+      type: TASK_STATUS,
+      payload: true
     });
-  });
+    tasksRef.on('value', snapshot => {
+      dispatch({
+        type: FETCH_TASKS,
+        payload: snapshot.val()
+      });
+      dispatch({
+        type: TASK_STATUS,
+        payload: false
+      });
+    }, () => {
+      dispatch({
+        type: TASK_STATUS,
+        payload: -1
+      });
+    });
+  };
 };
 
 export const fetchUser = () => dispatch => {
