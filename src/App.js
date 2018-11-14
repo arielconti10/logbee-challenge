@@ -8,10 +8,17 @@ import {Provider} from 'react-redux';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
   palette: {
     type: 'dark',
     primary: {
       main: '#f5a730',
+      dark: '#424242'
+    },
+    secondary: {
+      main: '#424242',
     },
   },
 });

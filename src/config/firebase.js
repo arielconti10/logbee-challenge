@@ -10,5 +10,5 @@ const FirebaseConfig = {
 firebase.initializeApp(FirebaseConfig);
 
 export const authRef = firebase.auth()  ;
-export const databaseRef = firebase.database().ref();
-export const tasksRef = databaseRef.child("tasks/");
+export const database = firebase.database();
+export const tasksRef = database.ref("tasks/");

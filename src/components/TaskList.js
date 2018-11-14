@@ -4,6 +4,7 @@ import TaskInfo from '../components/task-info'
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
 import withStyles from '@material-ui/core/styles/withStyles';
+import Popover from '@material-ui/core/Popover';
 import styles from '../styles';
 import {Popup} from "react-map-gl";
 
@@ -28,26 +29,32 @@ class TaskList extends Component{
           aria-owns={open ? 'simple-popper' : null}
           aria-haspopup="true"
           onClick={(event) => this.setState({anchorEl: event.currentTarget, popOverInfo: task[1]})}/>
-
       </List>
     )
   };
 
   _renderPopOver = () => {
-
     const {anchorEl} = this.state;
     const {popOverInfo} = this.state;
     const open = Boolean(anchorEl);
     return popOverInfo &&(
-      <Popup
+      <Popover
         tipSize={5}
-        anchor="top"
-        longitude={popOverInfo.longitude}
-        latitude={popOverInfo.latitude}
-        onClose={() => this.setState({popOverInfo: null})}
+        id="simple-popper"
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        onClose={() => this.setState({popOverInfo: null, anchorEl: null})}
       >
         <TaskInfo info={popOverInfo}/>
-      </Popup>
+      </Popover>
     )
   };
 
@@ -58,9 +65,17 @@ class TaskList extends Component{
   };
 
   render (){
+    const {anchorEl} = this.state;
+    const {popOverInfo} = this.state;
+    const open = Boolean(anchorEl);
+    console.log(this.props.tasks);
     return (
       <List>
-        { Object.entries(this.props.tasks).map(this._renderTaskItem) }
+        {
+            !this.props.tasks.filtered
+              ? Object.entries(this.props.tasks.list).map(this._renderTaskItem)
+            : Object.entries(this.props.tasks.filtered).map(this._renderTaskItem)
+        }
         { this._renderPopOver() }
       </List>
     )

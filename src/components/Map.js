@@ -53,7 +53,7 @@ export default class Map extends Component {
           {...this.state.viewport}
           mapboxApiAccessToken={TOKEN}
           width="100%"
-          height="100%"
+          height="100vh"
           mapStyle="mapbox://styles/mapbox/dark-v9"
           onViewportChange={this._updateViewport}
         >

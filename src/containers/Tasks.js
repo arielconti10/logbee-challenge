@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import '../App.css';
-import {AppBar, Toolbar, Grid, Button, Paper, Input, InputLabel, InputAdornment, FormControl, TextField,  LinearProgress} from '@material-ui/core';
+import {AppBar, Toolbar, Grid, Button, Paper, Input, InputLabel, InputAdornment, FormControl, LinearProgress} from '@material-ui/core';
 import bee from '../bee.svg';
 import withStyles from '@material-ui/core/styles/withStyles';
 import styles from '../styles';
 import { connect } from 'react-redux';
-import { fetchUser, fetchTasks, logout } from '../actions/index';
+import { fetchUser, fetchTasks, logout, searchTask} from '../actions/index';
 import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline";
 import Map from '../components/Map';
 import TaskList from '../components/TaskList';
-import SearchIcon from '@material-ui/icons/SearchIcon';
+import SearchIcon from '@material-ui/icons/Search';
 
 const navStyle = {
   position: 'absolute',
@@ -19,11 +19,15 @@ const navStyle = {
 };
 
 class Tasks extends Component {
-  state = {
-    completed: 0,
-    buffer: 10,
+  constructor(props) {
+    super(props);
+    this.state = {
+      completed: 0,
+      buffer: 10,
+    };
 
-  };
+    // this.handleSearchChange = this.handleSearchChange.bind(this);
+  }
 
   componentWillMount() {
     this.props.fetchTasks();
@@ -39,13 +43,15 @@ class Tasks extends Component {
     }
   }
 
+
+
   render(){
     return(
       <div>
         <CssBaseline/>
         {this.props.user.loading ? <LinearProgress /> :
           <main>
-            <AppBar color='dark' position="static">
+            <AppBar color='secondary' position="static">
               <Toolbar>
                 <Grid
                   justify="space-between" // Add it here :)
@@ -64,15 +70,16 @@ class Tasks extends Component {
               </Toolbar>
             </AppBar>
             <Paper>
-              {Object.keys(this.props.tasks).length > 1 ?
+              {
+                this.props.tasks.list != undefined && Object.keys(this.props.tasks.list).length > 1 ?
                 <Grid container spacing={16}>
-                  <Grid item xs='9'>
+                  <Grid item xs={9}>
                     <Map
-                      tasks={this.props.tasks ? this.props.tasks : ''}
+                      tasks={this.props.tasks.list ? this.props.tasks.list : ''}
                       navStyle={navStyle}
                     />
                   </Grid>
-                  <Grid item xs='3'>
+                  <Grid item xs={3}>
                     <FormControl >
                       <InputLabel htmlFor="input-with-icon-adornment">Pesquisar</InputLabel>
                       <Input
@@ -82,9 +89,10 @@ class Tasks extends Component {
                             <SearchIcon />
                           </InputAdornment>
                         }
+                        onChange={(event) => { this.props.searchTask(event.target.value)} }
                       />
                     </FormControl>
-                    <TaskList tasks={this.props.tasks ? this.props.tasks : ''}/>
+                    <TaskList tasks={this.props.tasks ? this.props.tasks : ''} />
                   </Grid>
                 </Grid>
                 : <LinearProgress/>
@@ -105,4 +113,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default withStyles(styles)(connect(mapStateToProps, {fetchUser, fetchTasks, logout})(Tasks));
+export default withStyles(styles)(connect(mapStateToProps, {fetchUser, fetchTasks, logout, searchTask})(Tasks));
