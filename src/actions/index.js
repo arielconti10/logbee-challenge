@@ -30,7 +30,6 @@ export function fetchTasks (){
 
 export function searchTask(search) {
   if(search){
-    console.log(search);
     return dispatch => {
       dispatch({
         type: LOADING_SEARCH,

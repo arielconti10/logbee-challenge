@@ -25,8 +25,6 @@ class Tasks extends Component {
       completed: 0,
       buffer: 10,
     };
-
-    // this.handleSearchChange = this.handleSearchChange.bind(this);
   }
 
   componentWillMount() {
@@ -42,8 +40,6 @@ class Tasks extends Component {
       this.props.history.replace('/login');
     }
   }
-
-
 
   render(){
     return(
@@ -71,7 +67,7 @@ class Tasks extends Component {
             </AppBar>
             <Paper>
               {
-                this.props.tasks.list != undefined && Object.keys(this.props.tasks.list).length > 1 ?
+                this.props.tasks.list !== undefined && Object.keys(this.props.tasks.list).length > 1 ?
                 <Grid container spacing={16}>
                   <Grid item xs={9}>
                     <Map
@@ -98,7 +94,6 @@ class Tasks extends Component {
                 : <LinearProgress/>
               }
               </Paper>
-
           </main>
         }
         </div>

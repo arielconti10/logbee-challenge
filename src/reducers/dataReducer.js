@@ -8,7 +8,6 @@ export default function (state = {}, action) {
         filtered: null,
       };
     case FETCH_TASKS_SEARCH:
-      console.log(action);
       return {
         ...state,
         filtered: action.payload

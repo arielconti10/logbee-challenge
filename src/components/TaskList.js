@@ -39,7 +39,6 @@ class TaskList extends Component{
     const open = Boolean(anchorEl);
     return popOverInfo &&(
       <Popover
-        tipSize={5}
         id="simple-popper"
         open={open}
         anchorEl={anchorEl}
@@ -65,10 +64,6 @@ class TaskList extends Component{
   };
 
   render (){
-    const {anchorEl} = this.state;
-    const {popOverInfo} = this.state;
-    const open = Boolean(anchorEl);
-    console.log(this.props.tasks);
     return (
       <List>
         {
