@@ -1,16 +1,34 @@
 import React, {Component} from 'react';
 import '../App.css';
-import {AppBar, Toolbar, Grid, Button} from '@material-ui/core';
+import {AppBar, Toolbar, Grid, Button, Paper, Input, InputLabel, InputAdornment, FormControl, LinearProgress} from '@material-ui/core';
 import bee from '../bee.svg';
 import withStyles from '@material-ui/core/styles/withStyles';
-import PropTypes from 'prop-types';
 import styles from '../styles';
 import { connect } from 'react-redux';
-import { fetchUser, logout } from '../actions/index';
+import { fetchUser, fetchTasks, logout, searchTask} from '../actions/index';
+import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline";
+import Map from '../components/Map';
+import TaskList from '../components/TaskList';
+import SearchIcon from '@material-ui/icons/Search';
+
+const navStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  padding: '10px'
+};
+
 class Tasks extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      completed: 0,
+      buffer: 10,
+    };
+  }
 
   componentWillMount() {
-    // this.props.getPosts();
+    this.props.fetchTasks();
     this.props.fetchUser();
     if (this.props.user.loading === false && this.props.user.email === undefined) {
       this.props.history.replace('/login');
@@ -24,36 +42,70 @@ class Tasks extends Component {
   }
 
   render(){
-    const {classes} = this.props;
     return(
-      <React.Fragment>
-        <AppBar color='dark' position="static">
-          <Toolbar>
-            <Grid
-              justify="space-between" // Add it here :)
-              container
-              spacing={24}
-            >
-              <Grid item>
-                <img src={bee} width={35} />
-              </Grid>
-              <Grid item>
-                <Button variant='contained' color="primary" className={classes.grow}>Sair</Button>
-              </Grid>
-            </Grid>
-          </Toolbar>
-        </AppBar>
-      </React.Fragment>
+      <div>
+        <CssBaseline/>
+        {this.props.user.loading ? <LinearProgress /> :
+          <main>
+            <AppBar color='secondary' position="static">
+              <Toolbar>
+                <Grid
+                  justify="space-between" // Add it here :)
+                  container
+                  spacing={24}
+                >
+                  <Grid item>
+                    <img src={bee} alt='logo-bee' width='35' />
+                  </Grid>
+                  <Grid item>
+                    <Button variant='contained' color="primary" onClick={() => {
+                      this.props.logout();
+                    }}>Sair</Button>
+                  </Grid>
+                </Grid>
+              </Toolbar>
+            </AppBar>
+            <Paper>
+              {
+                this.props.tasks.list !== undefined && Object.keys(this.props.tasks.list).length > 1 ?
+                <Grid container spacing={16}>
+                  <Grid item xs={9}>
+                    <Map
+                      tasks={this.props.tasks.list ? this.props.tasks.list : ''}
+                      navStyle={navStyle}
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <FormControl >
+                      <InputLabel htmlFor="input-with-icon-adornment">Pesquisar</InputLabel>
+                      <Input
+                        id="input-with-icon-adornment"
+                        startAdornment={
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        }
+                        onChange={(event) => { this.props.searchTask(event.target.value)} }
+                      />
+                    </FormControl>
+                    <TaskList tasks={this.props.tasks ? this.props.tasks : ''} />
+                  </Grid>
+                </Grid>
+                : <LinearProgress/>
+              }
+              </Paper>
+          </main>
+        }
+        </div>
     )
   }
 }
 
-Tasks.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
 function mapStateToProps(state) {
-  return {user: state.user};
+  return {
+    user: state.user,
+    tasks: state.tasks,
+  };
 }
 
-export default withStyles(styles)(connect(mapStateToProps, {fetchUser, logout})(Tasks));
+export default withStyles(styles)(connect(mapStateToProps, {fetchUser, fetchTasks, logout, searchTask})(Tasks));

@@ -29,7 +29,7 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.user.email !== undefined) {
-      this.props.history.push('/tasks');
+      this.props.history.push('/');
     }
   }
 
@@ -50,7 +50,7 @@ class Login extends Component {
       <main className={classes.layout}>
         <CssBaseline/>
         <Paper className={classes.paper}>
-          <img width='200' src={logo}/>
+          <img width='200' alt='logo' src={logo}/>
           <form onSubmit={event => { this.submitLogin(event);}} className={classes.form}>
             <FormControl error={!!this.state.error} margin="normal" required fullWidth>
               <InputLabel htmlFor="email">Email Address</InputLabel>
