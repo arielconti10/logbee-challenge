@@ -14,7 +14,7 @@ export default class TaskInfo extends PureComponent {
     const {info} = this.props;
     return (
       <div>
-        <div>
+        <div style={{color: '#fff'}}>
             <b>Endereço</b>: { info.address } <br />
             <b>Nome da tarefa</b>: { info.name} <br />
             <b>Data e hora estimada para o término</b>: { info.time } <br />
