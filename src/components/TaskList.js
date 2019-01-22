@@ -23,81 +23,30 @@ class TaskList extends Component {
     }
   }
 
-  _renderTaskItem = (task, index) => {
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
-
+  _renderTaskItem = (item, index) => {
     return (
       <div key={index}>
-
-
+        <ExpansionPanel key={index}>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography >{item[1].name}</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <TaskInfo info={item[1]} />
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
       </div>
-
-      // <List key={index}>
-      //   <ListItemText
-      //     dense="true"
-      //     primary={task[1].name}
-      //     aria-owns={open ? 'simple-popper' : null}
-      //     aria-haspopup="true"
-      //     onClick={(event) => this.setState({ anchorEl: event.currentTarget, popOverInfo: task[1] })} />
-      // </List>
     )
   };
 
-  _renderPopOver = () => {
-    const { anchorEl } = this.state;
-    const { popOverInfo } = this.state;
-    const open = Boolean(anchorEl);
-    return popOverInfo && (
-      <Popover
-        id="simple-popper"
-        open={open}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        onClose={() => this.setState({ popOverInfo: null, anchorEl: null })}
-      >
-        <TaskInfo info={popOverInfo} />
-      </Popover>
-    )
-  };
-
-  handleClose = () => {
-    this.setState({
-      anchorEl: null,
-    });
-  };
 
   render() {
     return (
       <List>
         {
-          !this.props.tasks.filtered ?
-            Object.entries(this.props.tasks.list).map((item, key) => 
-              <ExpansionPanel key={key}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography >{item[1].name}</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <TaskInfo info={item[1]} />
-                </ExpansionPanelDetails>
-                {/* {
-            !this.props.tasks.filtered
-              ? Object.entries(this.props.tasks.list).map(this._renderTaskItem)
-              : Object.entries(this.props.tasks.filtered).map(this._renderTaskItem)
-          } */}
-              </ExpansionPanel>
-            
+            this.props.tasks.map((item, key) => 
+              this._renderTaskItem(item, key)              
             )
-            : ''
         }
-        {/* {this._renderPopOver()} */}
       </List>
     )
   }
